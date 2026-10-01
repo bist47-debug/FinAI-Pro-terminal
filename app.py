@@ -4,66 +4,53 @@ from summarizer import extract_text_from_pdf, generate_earnings_brief, generate_
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="FinAI Pro | Institutional Earnings Terminal",
+    page_title="FinAI Pro | Earnings Intelligence",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --- PROFESSIONAL STYLING ---
+# --- EARNINGSCALL.AI INSPIRED STYLING ---
 st.markdown("""
     <style>
     .stApp {
-        background-color: #0e1117;
-        color: #e6edf3;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #0b0f19;
+        color: #f3f4f6;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
-    /* Hero Header */
-    .hero-container {
-        text-align: center;
-        padding: 2rem 1rem 2.5rem 1rem;
-        background: linear-gradient(180deg, #161b22 0%, #0e1117 100%);
-        border-bottom: 1px solid #30363d;
+    /* Top Navigation Bar style */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #1f2937;
         margin-bottom: 2rem;
-        border-radius: 12px;
     }
-    .hero-title {
-        font-size: 2.3rem;
-        font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 0.5rem;
+    
+    /* Demo Company Grid Cards */
+    .stock-card {
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
-    .hero-subtitle {
-        font-size: 1.05rem;
-        color: #8b949e;
-        max-width: 700px;
-        margin: 0 auto;
+    .stock-card:hover {
+        border-color: #3b82f6;
+        background-color: #1f2937;
     }
-
-    /* SaaS Service Cards */
-    .service-card {
-        background-color: #161b22;
-        border: 1px solid #30363d;
-        padding: 22px;
+    
+    /* Section Containers */
+    .content-box {
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        padding: 24px;
         border-radius: 10px;
-        height: 180px;
-        margin-bottom: 1rem;
-    }
-    .service-icon {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-    }
-    .service-title {
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: #ffffff;
-        margin-bottom: 0.4rem;
-    }
-    .service-desc {
-        font-size: 0.88rem;
-        color: #8b949e;
-        line-height: 1.4;
+        margin-bottom: 1.5rem;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -72,100 +59,80 @@ st.markdown("""
 if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
-# --- SIDEBAR CONFIGURATION ---
-st.sidebar.markdown("### ⚡ FinAI Pro Terminal")
-st.sidebar.caption("NSE/BSE Corporate Intelligence")
+# --- SIDEBAR CONTROLS ---
+st.sidebar.markdown("### 📊 FinAI Terminal")
+st.sidebar.caption("Institutional Earnings Intelligence")
 st.sidebar.markdown("---")
-auth_status = st.sidebar.selectbox("Access Mode", ["Guest View", "Admin / Institutional"])
-if auth_status == "Admin / Institutional":
-    pwd = st.sidebar.text_input("Admin Password", type="password")
-    if pwd == "password123":
-        st.sidebar.success("Pro Tier Unlocked")
+
+nav_mode = st.sidebar.radio("Navigation", ["Explore Demo Stocks", "Custom Filing Upload", "Multi-Quarter Matrix"])
 
 st.sidebar.markdown("---")
 analyst_name = st.sidebar.text_input("Analyst Watermark", value="Institutional Research Desk")
 
-# --- HERO HEADER SECTION ---
-st.markdown("""
-    <div class="hero-container">
-        <div class="hero-title">📈 FinAI Pro Institutional Earnings Terminal</div>
-        <div class="hero-subtitle">Next-generation NSE/BSE corporate filing intelligence, automated multi-quarter trend cross-examinations, and institutional document parsing.</div>
-    </div>
-""", unsafe_allow_html=True)
+# --- MAIN HEADER ---
+st.markdown("### ⚡ AI Earnings Call Summaries & Insights")
+st.markdown("Skip hours of reading transcripts. Get key takeaways, guidance, and financial metrics in minutes.")
+st.markdown("---")
 
-# --- SERVICE CARDS GRID ---
-st.markdown("### 🚀 Core Intelligence Services")
-col1, col2, col3 = st.columns(3)
+if nav_mode == "Explore Demo Stocks":
+    st.subheader("🔥 Quick-Select Market Demos")
+    st.write("Click or test a pre-loaded corporate filing to experience the earnings intelligence brief instantly:")
+    
+    # Grid of demo companies like EarningsCall.ai
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    selected_demo = None
+    with col1:
+        if st.button("🍎 AAPL (Apple)"):
+            selected_demo = "Apple Inc. Q4 FY26 Earnings Transcript. Revenue: $94.9B up 6% YoY. Services revenue hit an all-time high of $24.2B. Gross margin: 46.2%. Guidance for next quarter projects solid iPhone demand expansion."
+    with col2:
+        if st.button("🔍 GOOG (Google)"):
+            selected_demo = "Alphabet Inc. Q3 Earnings Transcript. Cloud revenue grew 35% YoY to $11.4B. Operating margins expanded to 32%. AI infrastructure investments driving strong enterprise demand."
+    with col3:
+        if st.button("⚡ TSLA (Tesla)"):
+            selected_demo = "Tesla Inc. Q3 Financial Update. Total revenues rose 8% YoY to $25.18B. Energy storage deployment reached a record 6.9 kWh. Operating margin came in at 7.6%."
+    with col4:
+        if st.button("💻 MSFT (Microsoft)"):
+            selected_demo = "Microsoft Corp Q1 Earnings. Intelligent Cloud revenue up 20% driven heavily by Azure and cloud AI services. Capital expenditures increased to support scaling data centers."
+    with col5:
+        if st.button("🛒 AMZN (Amazon)"):
+            selected_demo = "Amazon.com Q3 Results. AWS revenue accelerated to 19% growth YoY. Operating income improved significantly due to regionalized fulfillment network efficiencies."
 
-with col1:
-    st.markdown("""
-        <div class="service-card">
-            <div class="service-icon">📄</div>
-            <div class="service-title">Single Filing Scan</div>
-            <div class="service-desc">Deep-dive extraction of quarterly earnings, revenue metrics, and EBITDA breakdowns from any PDF.</div>
-        </div>
-    """, unsafe_allow_html=True)
+    if selected_demo:
+        st.markdown("---")
+        with st.spinner("Generating instant AI earnings breakdown..."):
+            brief = generate_earnings_brief(selected_demo)
+            st.markdown(f"### 📋 Executive Earnings Brief ({analyst_name})")
+            st.markdown(brief)
+    else:
+        st.info("Select any of the demo stocks above to view its structured earnings intelligence breakdown.")
 
-with col2:
-    st.markdown("""
-        <div class="service-card">
-            <div class="service-icon">📊</div>
-            <div class="service-title">Multi-Quarter Trend</div>
-            <div class="service-desc">Cross-examine multiple sequential reports to evaluate margin trajectories and YoY shifts.</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-        <div class="service-card">
-            <div class="service-icon">⚡</div>
-            <div class="service-title">Sample Sandbox</div>
-            <div class="service-desc">Test the terminal instantly using pre-loaded structural layouts before uploading your own reports.</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# --- WORKSPACE TABS ---
-tab1, tab2, tab3 = st.tabs(["📄 Live Filing Workspace", "📊 Trend Analysis", "⚡ Sample Sandbox & Demo"])
-
-with tab1:
-    st.subheader("Upload & Analyze Corporate Filing")
-    uploaded_file = st.file_uploader("Upload Quarterly Earnings PDF (NSE/BSE)", type=["pdf"], key="live_upload")
+elif nav_mode == "Custom Filing Upload":
+    st.subheader("📄 Custom Filing Workspace")
+    uploaded_file = st.file_uploader("Upload your corporate PDF earnings report or transcript (NSE/BSE/Global)", type=["pdf"])
     
     if uploaded_file is not None:
-        with st.spinner("Parsing document..."):
+        with st.spinner("Extracting text and running financial analysis..."):
             pdf_text = extract_text_from_pdf(uploaded_file)
-            if pdf_text and st.button("Generate Executive Brief"):
-                with st.spinner("Running AI financial breakdown..."):
+            if pdf_text and st.button("Generate Earnings Breakdown"):
+                with st.spinner("Analyzing document metrics and management tone..."):
                     brief = generate_earnings_brief(pdf_text)
+                    st.markdown("---")
                     st.markdown(f"### 📋 Executive Briefing ({analyst_name})")
                     st.markdown(brief)
 
-with tab2:
-    st.subheader("Multi-Quarter Cross-Examination")
-    uploaded_files = st.file_uploader("Upload 2+ Quarterly PDFs", type=["pdf"], accept_multiple_files=True, key="multi_upload")
+elif nav_mode == "Multi-Quarter Matrix":
+    st.subheader("📊 Multi-Quarter Trend Comparison")
+    st.write("Cross-examine multiple reports side-by-side to track long-term performance shifts.")
+    
+    uploaded_files = st.file_uploader("Upload 2 or more sequential PDFs", type=["pdf"], accept_multiple_files=True)
     if uploaded_files and len(uploaded_files) >= 2:
-        if st.button("Run Multi-Quarter Analysis"):
-            with st.spinner("Analyzing trajectory..."):
+        if st.button("Run Multi-Quarter Cross-Examination"):
+            with st.spinner("Cross-examining sequential performance metrics..."):
                 all_texts = [extract_text_from_pdf(f) for f in uploaded_files]
                 comparison = generate_multi_quarter_comparison(all_texts)
-                st.markdown("### 📊 Trajectory Report")
+                st.markdown("---")
+                st.markdown("### 📊 Trajectory & Peer Comparison Report")
                 st.markdown(comparison)
-
-with tab3:
-    st.subheader("Quick Sample Sandbox Scan")
-    st.write("Want to see how the terminal processes documents instantly? Load a built-in mock sample preview:")
-    
-    if st.button("Run Basic Scan on Sample Data"):
-        sample_mock_text = """
-        XYZ Corp Q4 FY26 Financial Results. 
-        Revenue reached INR 1,450 Crores, up 18% YoY. 
-        EBITDA margins expanded by 220 basis points to 24.5% due to optimized supply chains. 
-        Management guidance for FY27 projects 15-20% top-line growth.
-        """
-        with st.spinner("Scanning sample data..."):
-            sample_brief = generate_earnings_brief(sample_mock_text)
-            st.success("Sample scan completed successfully!")
-            st.markdown(f"### 📋 Sample Executive Brief ({analyst_name})")
-            st.markdown(sample_brief)
+    elif uploaded_files:
+        st.warning("Please upload at least 2 files to run a cross-examination matrix.")
