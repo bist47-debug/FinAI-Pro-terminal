@@ -1,9 +1,6 @@
 import streamlit as st
 import os
 from summarizer import extract_text_from_pdf, generate_earnings_brief, generate_multi_quarter_comparison
-from streamlit_extras.colored_header import colored_header
-from streamlit_extras.card import card
-from streamlit_extras.add_vertical_space import add_vertical_space
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -12,6 +9,64 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# --- PROFESSIONAL STYLING ---
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #0e1117;
+        color: #e6edf3;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    /* Hero Header */
+    .hero-container {
+        text-align: center;
+        padding: 2rem 1rem 2.5rem 1rem;
+        background: linear-gradient(180deg, #161b22 0%, #0e1117 100%);
+        border-bottom: 1px solid #30363d;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+    }
+    .hero-title {
+        font-size: 2.3rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1.05rem;
+        color: #8b949e;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* SaaS Service Cards */
+    .service-card {
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        padding: 22px;
+        border-radius: 10px;
+        height: 180px;
+        margin-bottom: 1rem;
+    }
+    .service-icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    .service-title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 0.4rem;
+    }
+    .service-desc {
+        font-size: 0.88rem;
+        color: #8b949e;
+        line-height: 1.4;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- API KEY INITIALIZATION ---
 if "OPENAI_API_KEY" in st.secrets:
@@ -30,77 +85,46 @@ if auth_status == "Admin / Institutional":
 st.sidebar.markdown("---")
 analyst_name = st.sidebar.text_input("Analyst Watermark", value="Institutional Research Desk")
 
-# --- HEADER SECTION ---
-colored_header(
-    label="📈 FinAI Pro Institutional Earnings Terminal",
-    description="Next-generation NSE/BSE corporate filing intelligence, automated multi-quarter trend cross-examinations, and institutional document parsing.",
-    color_name="blue-70"
-)
+# --- HERO HEADER SECTION ---
+st.markdown("""
+    <div class="hero-container">
+        <div class="hero-title">📈 FinAI Pro Institutional Earnings Terminal</div>
+        <div class="hero-subtitle">Next-generation NSE/BSE corporate filing intelligence, automated multi-quarter trend cross-examinations, and institutional document parsing.</div>
+    </div>
+""", unsafe_allow_html=True)
 
-add_vertical_space(1)
-
-# --- SERVICE CARDS GRID USING STREAMLIT-EXTRAS ---
-st.subheader("🚀 Core Intelligence Services")
+# --- SERVICE CARDS GRID ---
+st.markdown("### 🚀 Core Intelligence Services")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    card(
-        title="📄 Single Filing Scan",
-        text="Deep-dive extraction of quarterly earnings, revenue metrics, and EBITDA breakdowns from any PDF.",
-        image="",
-        url="",
-        styles={
-            "card": {
-                "background-color": "#161b22",
-                "border": "1px solid #30363d",
-                "border-radius": "10px",
-                "padding": "20px",
-                "color": "#e6edf3"
-            },
-            "title": {"font-size": "18px", "color": "#ffffff"},
-            "text": {"font-size": "14px", "color": "#8b949e"}
-        }
-    )
+    st.markdown("""
+        <div class="service-card">
+            <div class="service-icon">📄</div>
+            <div class="service-title">Single Filing Scan</div>
+            <div class="service-desc">Deep-dive extraction of quarterly earnings, revenue metrics, and EBITDA breakdowns from any PDF.</div>
+        </div>
+    """, unsafe_allow_html=True)
 
 with col2:
-    card(
-        title="📊 Multi-Quarter Trend",
-        text="Cross-examine multiple sequential reports to evaluate margin trajectories and YoY performance shifts.",
-        image="",
-        url="",
-        styles={
-            "card": {
-                "background-color": "#161b22",
-                "border": "1px solid #30363d",
-                "border-radius": "10px",
-                "padding": "20px",
-                "color": "#e6edf3"
-            },
-            "title": {"font-size": "18px", "color": "#ffffff"},
-            "text": {"font-size": "14px", "color": "#8b949e"}
-        }
-    )
+    st.markdown("""
+        <div class="service-card">
+            <div class="service-icon">📊</div>
+            <div class="service-title">Multi-Quarter Trend</div>
+            <div class="service-desc">Cross-examine multiple sequential reports to evaluate margin trajectories and YoY shifts.</div>
+        </div>
+    """, unsafe_allow_html=True)
 
 with col3:
-    card(
-        title="⚡ Sample Sandbox",
-        text="Test the terminal instantly using pre-loaded structural layouts before uploading your own reports.",
-        image="",
-        url="",
-        styles={
-            "card": {
-                "background-color": "#161b22",
-                "border": "1px solid #30363d",
-                "border-radius": "10px",
-                "padding": "20px",
-                "color": "#e6edf3"
-            },
-            "title": {"font-size": "18px", "color": "#ffffff"},
-            "text": {"font-size": "14px", "color": "#8b949e"}
-        }
-    )
+    st.markdown("""
+        <div class="service-card">
+            <div class="service-icon">⚡</div>
+            <div class="service-title">Sample Sandbox</div>
+            <div class="service-desc">Test the terminal instantly using pre-loaded structural layouts before uploading your own reports.</div>
+        </div>
+    """, unsafe_allow_html=True)
 
-add_vertical_space(2)
+st.markdown("<br>", unsafe_allow_html=True)
 
 # --- WORKSPACE TABS ---
 tab1, tab2, tab3 = st.tabs(["📄 Live Filing Workspace", "📊 Trend Analysis", "⚡ Sample Sandbox & Demo"])
