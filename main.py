@@ -15,10 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
 @app.post("/api/analyze-filing")
 async def analyze_filing(file: UploadFile = File(...)):
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="OPENAI_API_KEY environment variable is missing on the server.")
+    
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
     
@@ -29,6 +31,7 @@ async def analyze_filing(file: UploadFile = File(...)):
     if not raw_text.strip():
         raise HTTPException(status_code=400, detail="Could not extract text from PDF.")
     
+    client = openai.OpenAI(api_key=api_key)
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
