@@ -1,4 +1,5 @@
-streamlit
+fastapi
+uvicorn
+python-multipart
 pypdf
 openai
-streamlit-extras
