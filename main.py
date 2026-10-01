@@ -42,7 +42,7 @@ async def analyze_filing(file: UploadFile = File(...)):
             }
         ],
         temperature=0.3
-    ]
+    )
     
     return {
         "status": "success",
